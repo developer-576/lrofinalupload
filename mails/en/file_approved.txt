@@ -1,0 +1,8 @@
+Dear {firstname} {lastname},
+
+We are pleased to inform you that your uploaded file "{filename}" has been approved.
+
+Thank you for your submission.
+
+Best regards,
+Customer Support Team

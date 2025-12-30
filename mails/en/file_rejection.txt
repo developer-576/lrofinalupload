@@ -1,0 +1,10 @@
+Hello {firstname},
+
+Unfortunately, your uploaded document was rejected for the following reason:
+
+{reason}
+
+Please log into your profile to upload a corrected version.
+
+Thank you,
+LR File Upload Team

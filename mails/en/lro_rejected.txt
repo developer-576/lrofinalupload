@@ -1,0 +1,10 @@
+Hello {firstname},
+
+Your document "{requirement}" was rejected.
+
+Reason: {reason}
+
+Please upload a corrected file here:
+{upload_url}
+
+Thank you.

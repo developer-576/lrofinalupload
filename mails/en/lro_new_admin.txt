@@ -1,0 +1,15 @@
+Welcome to {shop_name}
+
+Hello {admin_name},
+
+Your admin access has been created. Use the credentials below to log in.
+
+Login URL: {portal_url}
+Username:  {username}
+Password:  {password}
+
+Security tip: Please log in and change your password after first use.
+
+Regards,
+{shop_name}
+{support_email}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{subject}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      width: 100%;
+      padding: 20px;
+    }
+    .email-box {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .email-header {
+      border-bottom: 2px solid #0077cc;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .email-header img {
+      max-height: 50px;
+    }
+    .email-body p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #333333;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #0077cc;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+    .email-footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-box">
+      <div class="email-header">
+        <img src="{shop_logo}" alt="{shop_name} Logo">
+      </div>
+      <div class="email-body">
+        <p><strong>{subject}</strong></p>
+        {$message}
+      </div>
+      <div class="email-footer">
+        &copy; {shop_name} - <a href="{shop_url}" style="color: #0077cc; text-decoration: none;">{shop_url}</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
