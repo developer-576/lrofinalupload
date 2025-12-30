@@ -1,0 +1,59 @@
+/* Match "Manage Admins" look/feel */
+
+/* Blue strip like your page header */
+.lro-topbar{
+  background:#0d6efd;           /* same blue */
+  padding:10px 12px;            /* Manage Admins spacing */
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+
+/* Tabs: compact pills, bold, white text */
+.lro-topbar .lro-tab{
+  --pad-x:.85rem;
+  --pad-y:.42rem;
+  color:#fff;
+  background:rgba(255,255,255,.15);
+  border:0;
+  border-radius:8px;
+  padding:var(--pad-y) var(--pad-x);
+  font-weight:600;
+  line-height:1.1;
+  box-shadow:none;
+}
+
+/* Hover a bit brighter, keep white text */
+.lro-topbar .lro-tab:hover{
+  background:rgba(255,255,255,.25);
+  color:#fff;
+}
+
+/* Active tab = white pill with blue text (like Manage Admins) */
+.lro-topbar .lro-tab.active{
+  background:#fff;
+  color:#0d6efd;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+/* Logout button: red pill on right */
+.lro-topbar .lro-logout{
+  color:#fff;
+  background:#dc3545;
+  border:0;
+  border-radius:8px;
+  padding:.42rem .85rem;
+  font-weight:600;
+}
+.lro-topbar .lro-logout:hover{
+  background:#c52a39;
+  color:#fff;
+}
+
+/* Consistent inner page spacing like Manage Admins */
+.lro-page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:22px 16px;
+}
+
+/* Optional: tighten table header look to match */
+.table thead th{ white-space:nowrap; font-weight:600; }
