@@ -1,0 +1,297 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// PrestaShop config
+require_once dirname(__DIR__, 2) . '/config/config.inc.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    file_put_contents(__DIR__ . '/logs/post_debug.log', print_r($_POST, true), FILE_APPEND);
+}
+
+try {
+    $table = _DB_PREFIX_ . 'lrofileupload_admins';
+
+    // Check if the column exists
+    $col = Db::getInstance()->executeS("SHOW COLUMNS FROM `$table` LIKE 'is_master'");
+    if (empty($col)) {
+        // Add the column if it doesn't exist
+        $result = Db::getInstance()->execute("ALTER TABLE `$table` ADD COLUMN `is_master` TINYINT(1) NOT NULL DEFAULT 0");
+        if ($result) {
+            echo "<b>Success:</b> Added <code>is_master</code> column to <code>$table</code>.";
+        } else {
+            echo "<b>Error:</b> Failed to add <code>is_master</code> column to <code>$table</code>.";
+        }
+    } else {
+        echo "<b>Info:</b> <code>is_master</code> column already exists in <code>$table</code>.";
+    }
+} catch (Exception $e) {
+    echo "<b>Exception:</b> " . htmlspecialchars($e->getMessage());
+}
+?> [15-Jul-2025 08:41:39 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 19
+[15-Jul-2025 08:41:52 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 19
+[15-Jul-2025 08:41:52 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 19
+[15-Jul-2025 08:42:07 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 19
+[15-Jul-2025 08:45:59 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'full armour 528 and 928 G D Burns_1747411707 (1).pdf, 'Pending', NOW())
+    ON ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'full armour 528 and 928 G D Burns_1747411707 (1).pdf, 'Pending', NOW())
+    ON ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 08:46:03 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FULL ARMOUR 528 AND 928 D PRINSLOO_1747400881 (1).pdf, 'Pending', NOW())
+    ON' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FULL ARMOUR 528 AND 928 D PRINSLOO_1747400881 (1).pdf, 'Pending', NOW())
+    ON' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 08:46:17 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EMANCIPATION L DU PLESSIS_1750694590.pdf, 'Pending', NOW())
+    ON DUPLICATE KE' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EMANCIPATION L DU PLESSIS_1750694590.pdf, 'Pending', NOW())
+    ON DUPLICATE KE' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(76): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 08:53:47 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(81): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(81): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 08:55:38 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(82): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(82): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 11:03:10 UTC] Upload handler triggered.
+[15-Jul-2025 09:03:10 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(85): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(85): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: Upload handler triggered.
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: Processing upload for customer 157, requirement 13.
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: Requirement details loaded: Array
+(
+    [id_requirement] => 13
+    [id_group] => 32
+    [requirement_name] => Proof of address
+    [type] => Pdf
+    [required] => 1
+    [description] => any bill in your name
+    [sort_order] => 1
+    [created_at] => 2025-07-14 16:31:19
+)
+
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: File MIME: application/pdf, Extension: pdf, Allowed: pdf
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: Moving file to /home/mfjprqzu/public_html/modules/lrofileupload/../../../uploads_lrofileupload/1752578685_Noelene Maritz 528_1752395186.pdf
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: File moved successfully.
+[15-Jul-2025 09:24:45 Etc/GMT+2] DEBUG: Existing upload? 
+[15-Jul-2025 09:24:45 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(97): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(97): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 09:32:14 Etc/GMT+2] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:149
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/DbPDO.php(149): PDO->query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#2 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#3 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(106): DbCore->execute()
+#4 {main}
+
+Next PrestaShopException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Maritz 528_1752395186.pdf, 'Pending', NOW())
+    ON DUPLICATE KEY UPDATE 
+    ' at line 3 in /home/mfjprqzu/public_html/classes/db/DbPDO.php:151
+Stack trace:
+#0 /home/mfjprqzu/public_html/classes/db/Db.php(377): DbPDOCore->_query()
+#1 /home/mfjprqzu/public_html/classes/db/Db.php(567): DbCore->query()
+#2 /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php(106): DbCore->execute()
+#3 {main}
+  thrown in /home/mfjprqzu/public_html/classes/db/DbPDO.php on line 151
+[15-Jul-2025 12:02:22 UTC] PHP Parse error:  syntax error, unexpected string content "tm]()", expecting "]" in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 57
+[15-Jul-2025 12:02:36 UTC] PHP Parse error:  syntax error, unexpected string content "tm]()", expecting "]" in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 57
+[15-Jul-2025 10:09:27 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 20
+[15-Jul-2025 10:10:24 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 20
+[15-Jul-2025 12:11:51 UTC] PHP Warning:  Undefined variable $file in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 8
+[15-Jul-2025 12:11:51 UTC] PHP Warning:  Trying to access array offset on value of type null in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 8
+[15-Jul-2025 12:11:51 UTC] PHP Warning:  Undefined variable $destination in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 8
+[15-Jul-2025 12:11:51 UTC] PHP Deprecated:  move_uploaded_file(): Passing null to parameter #1 ($from) of type string is deprecated in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 8
+[15-Jul-2025 12:11:51 UTC] PHP Deprecated:  move_uploaded_file(): Passing null to parameter #2 ($to) of type string is deprecated in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 8
+[15-Jul-2025 10:13:33 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 24
+[15-Jul-2025 10:18:31 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 24
+[15-Jul-2025 10:18:35 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 24
+[15-Jul-2025 10:22:51 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:24
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 24
+[15-Jul-2025 10:29:11 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 28
+[15-Jul-2025 10:38:19 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 14
+[15-Jul-2025 10:38:19 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 34
+[15-Jul-2025 10:41:00 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 14
+[15-Jul-2025 10:41:00 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 34
+[15-Jul-2025 12:43:31 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 13
+[15-Jul-2025 10:43:31 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 23
+[15-Jul-2025 10:43:31 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 43
+[15-Jul-2025 12:45:50 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 13
+[15-Jul-2025 10:45:50 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 23
+[15-Jul-2025 10:45:50 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 43
+[15-Jul-2025 12:49:05 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 13
+[15-Jul-2025 10:49:06 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 23
+[15-Jul-2025 10:49:06 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:43
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 43
+[15-Jul-2025 12:51:57 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 10
+[15-Jul-2025 10:51:57 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 10
+[15-Jul-2025 10:51:57 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:44
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 44
+[15-Jul-2025 12:57:28 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 10
+[15-Jul-2025 10:57:28 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/modules/lrofileupload/../../uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 10
+[15-Jul-2025 10:57:28 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:44
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 44
+[15-Jul-2025 13:03:07 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 9
+[15-Jul-2025 13:03:07 UTC] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 14
+[15-Jul-2025 11:03:07 Etc/GMT+2] PHP Warning:  file_put_contents(/home/mfjprqzu/public_html/uploads_lrofileupload/debug_log.txt): Failed to open stream: No such file or directory in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 14
+[15-Jul-2025 11:03:07 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:48
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 48
+[15-Jul-2025 11:09:52 Etc/GMT+2] PHP Fatal error:  Uncaught Error: Call to protected method DbPDOCore::getPDO() from global scope in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php:50
+Stack trace:
+#0 {main}
+  thrown in /home/mfjprqzu/public_html/modules/lrofileupload/uploadhandler.php on line 50

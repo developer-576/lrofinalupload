@@ -1,0 +1,320 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+class Lrofileupload extends Module
+{
+    public function __construct()
+    {
+        $this->name = 'lrofileupload';
+        $this->tab = 'front_office_features';
+        $this->version = '1.0.0';
+        $this->author = 'Your Name';
+        $this->need_instance = 0;
+        $this->ps_versions_compliancy = [
+            'min' => '1.7.0.0',
+            'max' => _PS_VERSION_
+        ];
+        $this->bootstrap = true;
+
+        parent::__construct();
+
+        $this->displayName = $this->l('File Upload Module');
+        $this->description = $this->l('Allows customers to upload files for products');
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+
+        // Configure Smarty safely
+        if (isset($this->context->smarty)) {
+            $this->configureSmarty();
+        }
+    }
+
+    private function configureSmarty()
+    {
+        try {
+            $smarty = $this->context->smarty;
+            
+            // Basic configuration
+            $smarty->caching = false;
+            $smarty->force_compile = true;
+            $smarty->compile_check = true;
+            $smarty->cache_lifetime = 0;
+            
+            // Set template directories
+            $smarty->setTemplateDir([
+                _PS_MODULE_DIR_ . $this->name . '/',
+                _PS_THEME_DIR_ . 'modules/' . $this->name . '/'
+            ]);
+            
+            // Clear cache
+            if (method_exists($smarty, 'clearAllCache')) {
+                $smarty->clearAllCache();
+            }
+            if (method_exists($smarty, 'clearCompiledTemplate')) {
+                $smarty->clearCompiledTemplate();
+            }
+        } catch (Exception $e) {
+            // Log error but continue
+            PrestaShopLogger::addLog('Lrofileupload Smarty configuration error: ' . $e->getMessage(), 3);
+        }
+    }
+
+    public function install()
+    {
+        // Create uploads directory
+        if (!file_exists(dirname(__FILE__) . '/uploads')) {
+            mkdir(dirname(__FILE__) . '/uploads', 0755, true);
+        }
+
+        // Create and set permissions for Smarty cache directory
+        $cache_dir = _PS_CACHE_DIR_ . 'smarty/cache/';
+        if (!file_exists($cache_dir)) {
+            mkdir($cache_dir, 0755, true);
+        }
+        chmod($cache_dir, 0755);
+
+        // Set default configuration
+        Configuration::updateValue('LROFILEUPLOAD_FILE_GROUPS', json_encode($this->getDefaultFileGroups()));
+
+        return parent::install()
+            && $this->registerHook('displayProductAdditionalInfo')
+            && $this->registerHook('header')
+            && $this->installDb()
+            && $this->registerHook('displayCustomerAccount')
+            && $this->registerHook('displayMyAccountBlock')
+            && $this->registerHook('displayMyAccountDashboard');
+    }
+
+    public function uninstall()
+    {
+        // Remove configuration
+        Configuration::deleteByName('LROFILEUPLOAD_FILE_GROUPS');
+
+        return parent::uninstall() &&
+            $this->uninstallDb();
+    }
+
+    public function installDb()
+    {
+        $prefix = _DB_PREFIX_;
+        
+        // Create admins table
+        $sql = "CREATE TABLE IF NOT EXISTS `{$prefix}lrofileupload_admins` (
+            `id_admin` INT(11) NOT NULL AUTO_INCREMENT,
+            `username` VARCHAR(255) NOT NULL,
+            `password_hash` VARCHAR(255) NOT NULL,
+            `is_master` TINYINT(1) NOT NULL DEFAULT 0,
+            `date_add` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `last_login` DATETIME DEFAULT NULL,
+            PRIMARY KEY (`id_admin`),
+            UNIQUE INDEX `idx_username` (`username`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+        
+        if (!Db::getInstance()->execute($sql)) {
+            return false;
+        }
+
+        // Create files table
+        $sql = "CREATE TABLE IF NOT EXISTS `{$prefix}lrofileupload_files` (
+            `id_lrofileupload_file` INT(11) NOT NULL AUTO_INCREMENT,
+            `id_customer` INT(11) NOT NULL,
+            `id_product` INT(11) DEFAULT NULL,
+            `filename` VARCHAR(255) NOT NULL,
+            `original_name` VARCHAR(255) NOT NULL,
+            `status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+            `reason` TEXT,
+            `reference_number` VARCHAR(64) DEFAULT NULL,
+            `date_add` DATETIME NOT NULL,
+            `date_approved` DATETIME DEFAULT NULL,
+            PRIMARY KEY (`id_lrofileupload_file`),
+            INDEX `idx_id_customer` (`id_customer`),
+            INDEX `idx_id_product` (`id_product`),
+            INDEX `idx_status` (`status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+        
+        if (!Db::getInstance()->execute($sql)) {
+            return false;
+        }
+
+        // Insert default admin user
+        $password_hash = password_hash('admin123', PASSWORD_DEFAULT);
+        $sql = "INSERT INTO `{$prefix}lrofileupload_admins` 
+                (username, password_hash, is_master, date_add) 
+                VALUES ('admin', '" . pSQL($password_hash) . "', 1, NOW())";
+        
+        return Db::getInstance()->execute($sql);
+    }
+
+    public function uninstallDb()
+    {
+        $tables = [
+            'lrofileupload_files',
+            'lrofileupload_admins'
+        ];
+
+        foreach ($tables as $table) {
+            Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . $table . '`');
+        }
+
+        return true;
+    }
+
+    public function getContent()
+    {
+        $output = '';
+        
+        if (Tools::isSubmit('submit' . $this->name)) {
+            $file_groups = Tools::getValue('LROFILEUPLOAD_FILE_GROUPS');
+            
+            // Validate JSON
+            if ($file_groups) {
+                json_decode($file_groups);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    Configuration::updateValue('LROFILEUPLOAD_FILE_GROUPS', $file_groups);
+                    $output .= $this->displayConfirmation($this->l('Settings updated'));
+                } else {
+                    $output .= $this->displayError($this->l('Invalid JSON format'));
+                }
+            }
+        }
+        
+        // Handle AJAX requests
+        if (Tools::getValue('ajax') && Tools::getValue('action') == 'saveConfiguration') {
+            $configuration = Tools::getValue('configuration');
+            if ($configuration) {
+                json_decode($configuration);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    Configuration::updateValue('LROFILEUPLOAD_FILE_GROUPS', $configuration);
+                    die(json_encode(['success' => true]));
+                }
+            }
+            die(json_encode(['success' => false]));
+        }
+        
+        // Get current configuration and restructure it
+        $file_groups = json_decode(Configuration::get('LROFILEUPLOAD_FILE_GROUPS'), true);
+        if (!is_array($file_groups)) {
+            $file_groups = [];
+        }
+
+        // Restructure the data to match template expectations
+        $restructured_groups = [];
+        foreach ($file_groups as $product_id => $group) {
+            $restructured_groups[$product_id] = [
+                'group_name' => isset($group['group_name']) ? $group['group_name'] : '',
+                'documents' => isset($group['documents']) ? $group['documents'] : []
+            ];
+        }
+        
+        $this->context->smarty->assign([
+            'file_groups' => $restructured_groups,
+            'link' => $this->context->link
+        ]);
+        
+        return $output . $this->display(__FILE__, 'views/templates/admin/configure.tpl');
+    }
+
+    public function display($file, $template, $cache_id = null, $compile_id = null)
+    {
+        try {
+            // Ensure Smarty is configured
+            $this->configureSmarty();
+            
+            // Try direct template rendering first
+            $template_path = _PS_MODULE_DIR_ . $this->name . '/' . $template;
+            if (file_exists($template_path)) {
+                return $this->context->smarty->fetch($template_path);
+            }
+            
+            // Fallback to parent display
+            return parent::display($file, $template, $cache_id, $compile_id);
+        } catch (Exception $e) {
+            // If all else fails, try direct file reading
+            $template_path = _PS_MODULE_DIR_ . $this->name . '/' . $template;
+            if (file_exists($template_path)) {
+                return file_get_contents($template_path);
+            }
+            return '';
+        }
+    }
+
+    public function hookDisplayProductAdditionalInfo($params)
+    {
+        if (!$this->context->customer->isLogged()) {
+            return $this->display(__FILE__, 'login_required.tpl');
+        }
+
+        $this->context->smarty->assign([
+            'id_product' => $params['product']['id_product']
+        ]);
+
+        return $this->display(__FILE__, 'upload.tpl');
+    }
+
+    public function hookHeader()
+    {
+        $this->context->controller->addCSS($this->_path . 'views/css/lrofileupload.css');
+        $this->context->controller->addJS($this->_path . 'views/js/lrofileupload.js');
+    }
+
+    public function getDefaultFileGroups()
+    {
+        return [
+            528 => [
+                ['title' => 'ID Copy', 'file_type' => 'jpeg'],
+                ['title' => 'Selfie', 'file_type' => 'jpeg'],
+                ['title' => 'Proof of Address', 'file_type' => 'pdf'],
+                ['title' => 'Red Right Thumb on Blank Page', 'file_type' => 'jpeg'],
+                ['title' => 'Universal Declaration', 'file_type' => 'pdf'],
+                ['title' => 'Witness Testimony 1', 'file_type' => 'pdf'],
+                ['title' => 'Witness Testimony 2', 'file_type' => 'pdf'],
+                ['title' => 'Registered Post or Email Tracking Number', 'file_type' => 'pdf'],
+                ['title' => 'Extra PDF', 'file_type' => 'pdf'],
+                ['title' => 'Extra JPEG', 'file_type' => 'jpeg'],
+            ],
+            928 => [
+                ['title' => 'Act of Expatriation', 'file_type' => 'pdf'],
+                ['title' => 'Baby Deed of Land Recording', 'file_type' => 'pdf'],
+                ['title' => 'Cancellation of Powers of Attorney', 'file_type' => 'pdf'],
+                ['title' => 'Certificate of Assumed Name', 'file_type' => 'pdf'],
+                ['title' => 'Claim of Life and Estate', 'file_type' => 'pdf'],
+                ['title' => 'Common Carry Declaration', 'file_type' => 'pdf'],
+                ['title' => 'Deed of Reconveyance', 'file_type' => 'pdf'],
+                ['title' => 'Mandatory Notice', 'file_type' => 'pdf'],
+                ['title' => 'Notice of Intent - Fee Schedule', 'file_type' => 'pdf'],
+                ['title' => 'Recording Cover Letter', 'file_type' => 'pdf'],
+                ['title' => 'Extra PDF', 'file_type' => 'pdf'],
+                ['title' => 'Extra JPEG', 'file_type' => 'jpeg'],
+            ],
+        ];
+    }
+
+    public function hookDisplayCustomerAccount($params = [])
+    {
+        return $this->renderDashboardLinks();
+    }
+
+    public function hookDisplayMyAccountBlock($params = [])
+    {
+        return $this->renderDashboardLinks();
+    }
+
+    public function hookDisplayMyAccountDashboard($params = [])
+    {
+        return $this->renderDashboardLinks();
+    }
+
+    private function renderDashboardLinks()
+    {
+        $this->context->smarty->assign([
+            'upload_url' => $this->context->link->getModuleLink('lrofileupload', 'upload'),
+            'history_url' => $this->context->link->getModuleLink('lrofileupload', 'profile'),
+        ]);
+        return $this->display(__FILE__, 'views/templates/hook/dashboard_links.tpl');
+    }
+}
